@@ -121,8 +121,6 @@ export ROT_REDDIT_CLIENT_SECRET="your_client_secret"
 export ROT_REDDIT_USER_AGENT="rot:v0.0.1 (by u_yourusername)"
 ```
 
-**Do not commit credentials.**
-Add `.env` to `.gitignore` if needed.
 
 ---
 
@@ -195,6 +193,7 @@ It does not provide financial advice and does not place trades.
 
 ---
 .
+
 
 
 
