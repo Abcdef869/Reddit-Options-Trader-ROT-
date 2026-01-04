@@ -2,10 +2,10 @@
 ```markdown
 # Reddit Options Trader (ROT)
 
-A modular research pipeline that turns **trending Reddit discussions** into
-**structured market events** and **options trade ideas**.
+A modular research pipeline that turns trending Reddit discussions into
+structured market events and options trade ideas.
 
-This project is focused on **infrastructure**, not “print money” claims.
+This project is focused on infrastructure, not “print money” claims.
 
 ---
 
@@ -30,33 +30,33 @@ Reddit → Snapshots → Trend Detection → Events
 ```
 
 Key design choice:  
-**Reddit is treated as an event discovery surface, not a truth source.**
+Reddit is treated as an event discovery surface, not a truth source.
 
 ---
 
 ## Core concepts
 
-- **ThreadSnapshot**  
+- ThreadSnapshot
   Point-in-time capture of a Reddit post (and optional comments).
 
-- **TrendCandidate**  
+- TrendCandidate  
   A post or entity showing *acceleration* (rate of change), not raw popularity.
 
-- **Event**  
+- Event 
   Structured representation of a potential market catalyst:
   - entities (tickers / companies)
   - stance (bullish / bearish / unknown)
   - time horizon
   - evidence + confidence
 
-- **ReasoningPacket**  
+- ReasoningPacket 
   Schema-locked LLM output:
   - thesis
   - catalyst window
   - invalidations
   - suggested option structures
 
-- **TradeIdea**  
+- TradeIdea
   A paper-trade object with:
   - defined risk
   - no execution by default
@@ -85,7 +85,7 @@ trade_ideas.jsonl
 
 ````
 
-All outputs are logged as **JSONL** for replay, debugging, and backtesting.
+All outputs are logged as JSONL for replay, debugging, and backtesting.
 
 ---
 
@@ -98,7 +98,7 @@ All outputs are logged as **JSONL** for replay, debugging, and backtesting.
 - ⏳ Market data integration
 - ⏳ Live / paper trading (optional)
 
-By default, the system **does not place trades**.
+By default, the system does not place trades.
 
 ---
 
@@ -144,4 +144,5 @@ PipelineRunner.run_once()
 
 This project is for **research and experimentation**.
 Nothing here constitutes financial advice.
+
 
