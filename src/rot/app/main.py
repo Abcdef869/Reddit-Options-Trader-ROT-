@@ -32,7 +32,6 @@ def main() -> None:
     )
 
     runner.run_once()
-    print("✅ Run complete. Check storage/*.jsonl")
 
 
 if __name__ == "__main__":

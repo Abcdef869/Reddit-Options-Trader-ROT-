@@ -16,11 +16,7 @@ from rot.app.runner import PipelineRunner
 def loop(interval_s: int = 20) -> None:
     logger = JsonlLogger(root="storage")
 
-    ingestor = RedditIngestor(
-        subreddits=["wallstreetbets", "stocks"],
-        listing="hot",
-        limit_per_sub=50,
-    )
+    ingestor = RedditIngestor(subreddits=["wallstreetbets", "stocks"], listing="hot", limit_per_sub=50)
     trend_engine = TrendEngine(store=TrendStore(), window_s=1800)
     event_builder = EventBuilder()
     cred = CredibilityScorer()
@@ -39,27 +35,14 @@ def loop(interval_s: int = 20) -> None:
 
     while True:
         summary = runner.run_once()
-        if isinstance(summary, dict) and "run_id" in summary:
-            print(
-                f"✅ {summary['run_id']} | snapshots={summary.get('snapshots')} "
-                f"candidates={summary.get('candidates')} events={summary.get('events')} "
-                f"ideas={summary.get('trade_ideas')}"
-            )
+        print(f"✅ {summary['run_id']} | snapshots={summary['snapshots']} candidates={summary['candidates']} ticker_candidates={summary['ticker_candidates']} events={summary['events']} ideas={summary['trade_ideas']} top_all={summary['top_signals']} top_ticker={summary['top_ticker_signals']}")
+        print(
+            f"✅ {summary['run_id']} | snapshots={summary['snapshots']} "
+            f"candidates={summary['candidates']} ticker_candidates={summary['ticker_candidates']} "
+            f"events={summary['events']} ideas={summary['trade_ideas']} "
+            f"top_all={summary['top_signals']} top_ticker={summary['top_ticker_signals']}"
+        )
         time.sleep(interval_s)
-
-        # Debug: print top 3 trend candidates this run (if any)
-        try:
-            import json
-            with open("storage/trend_candidates.jsonl", "r", encoding="utf-8") as f:
-                lines = f.read().splitlines()
-            if lines:
-                last = json.loads(lines[-1])
-                c = last.get("candidate", {})
-                post = c.get("snapshot", {}).get("post", {})
-                print(f"   ↳ top: {c.get('trend_score'):.4f} | {post.get('subreddit')} | {post.get('title')[:90]}")
-        except Exception:
-            pass
-
 
 
 if __name__ == "__main__":

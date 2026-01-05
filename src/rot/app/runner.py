@@ -5,14 +5,29 @@ import time
 from rot.core.logging import JsonlLogger
 from rot.ingest.reddit_ingestor import RedditIngestor
 from rot.trend.trend_engine import TrendEngine
+from rot.trend.ranker import top_n_candidates
+from rot.trend.ticker_ranker import top_ticker_candidates
 from rot.extract.event_builder import EventBuilder
 from rot.credibility.scorer import CredibilityScorer
 from rot.reasoner.deepseek_client import DeepSeekReasoner
 from rot.market.trade_builder import TradeBuilder
+from rot.market.enricher import MarketEnricher
+from rot.market.symbol_validator import SymbolValidator
 
 
 class PipelineRunner:
-    def __init__(self, ingestor: RedditIngestor, trend_engine: TrendEngine, event_builder: EventBuilder, cred: CredibilityScorer, reasoner: DeepSeekReasoner, trade_builder: TradeBuilder, logger: JsonlLogger) -> None:
+    def __init__(
+        self,
+        ingestor: RedditIngestor,
+        trend_engine: TrendEngine,
+        event_builder: EventBuilder,
+        cred: CredibilityScorer,
+        reasoner: DeepSeekReasoner,
+        trade_builder: TradeBuilder,
+        logger: JsonlLogger,
+        enricher: MarketEnricher | None = None,
+        symbol_validator: SymbolValidator | None = None,
+    ) -> None:
         self.ingestor = ingestor
         self.trend_engine = trend_engine
         self.event_builder = event_builder
@@ -20,25 +35,107 @@ class PipelineRunner:
         self.reasoner = reasoner
         self.trade_builder = trade_builder
         self.log = logger
+        self.enricher = enricher or MarketEnricher()
+        self.symbol_validator = symbol_validator or SymbolValidator()
 
     def run_once(self) -> dict:
         run_id = f"run_{int(time.time())}"
+
+        # 1) ingest
         snapshots = self.ingestor.poll()
         for s in snapshots:
             self.log.write("snapshots", {"run_id": run_id, "snapshot": s})
 
+        # 2) trend detect
         candidates = self.trend_engine.detect(snapshots)
         for c in candidates:
             self.log.write("trend_candidates", {"run_id": run_id, "candidate": c})
 
-        events = []
-        for c in candidates:
-            events.extend(self.event_builder.from_candidate(c))
+        # 2a) Top signals (ALL)
+        top_all = top_n_candidates(candidates, n=5)
+        for rank, c in enumerate(top_all, start=1):
+            p = c.snapshot.post
+            self.log.write(
+                "top_signals",
+                {
+                    "run_id": run_id,
+                    "rank": rank,
+                    "trend_score": c.trend_score,
+                    "subreddit": p.subreddit,
+                    "title": p.title,
+                    "post_id": p.id,
+                    "permalink": p.permalink,
+                },
+            )
 
+        # Build extracted entities map once (used by prints + ticker ranking)
+        extracted_by_key: dict[str, list[str]] = {}
+        for c in candidates:
+            p = c.snapshot.post
+            ents = self.event_builder.extract_entities(p.title, p.selftext)
+            extracted_by_key[c.key] = ents
+
+        if top_all:
+            print("🔥 Top signals:")
+            for i, c in enumerate(top_all, start=1):
+                p = c.snapshot.post
+                ents = extracted_by_key.get(c.key, [])
+                ents_s = ",".join(ents[:5]) if ents else "-"
+                print(f"  {i}. {p.subreddit} | {p.title[:80]} [{ents_s}] (score={c.trend_score:.3f})")
+
+        # 2b) Build events once, reuse downstream
+        # Also track ticker-aware candidate count for summary
+        events = []
+        ticker_candidates = []
+
+        for c in candidates:
+            evs = self.event_builder.from_candidate(c)  # returns [] if no tickers
+            if evs:
+                ticker_candidates.append(c)
+                events.extend(evs)
+
+        ticker_candidate_count = sum(
+            1
+            for c in candidates
+            if any(self.symbol_validator.is_valid(sym) for sym in extracted_by_key.get(c.key, []))
+        )
+
+        # 2c) Top signals (TICKER-AWARE)
+        top_ticker_pairs = top_ticker_candidates(
+            candidates=candidates,
+            extracted=extracted_by_key,
+            validator=self.symbol_validator,
+            n=5,
+        )
+
+        for rank, (c, syms) in enumerate(top_ticker_pairs, start=1):
+            p = c.snapshot.post
+            self.log.write(
+                "top_ticker_signals",
+                {
+                    "run_id": run_id,
+                    "rank": rank,
+                    "trend_score": c.trend_score,
+                    "subreddit": p.subreddit,
+                    "title": p.title,
+                    "post_id": p.id,
+                    "permalink": p.permalink,
+                    "symbols": syms,
+                },
+            )
+
+        print("🎯 Top ticker signals:")
+        for i, (c, syms) in enumerate(top_ticker_pairs, 1):
+            p = c.snapshot.post
+            print(f"  {i}. {p.subreddit} | {p.title[:80]} [{','.join(syms)}] (score={c.trend_score:.3f})")
+
+        # 3) enrich + score events
+        events = [self.enricher.enrich_event(e) for e in events]
         scored = [self.cred.score(e) for e in events]
         for e in scored:
             self.log.write("events", {"run_id": run_id, "event": e})
 
+        # 4) reason + ideas
         idea_count = 0
         for e in scored:
             packet = self.reasoner.reason(e)
@@ -52,6 +149,10 @@ class PipelineRunner:
             "run_id": run_id,
             "snapshots": len(snapshots),
             "candidates": len(candidates),
+            "ticker_candidates": len(ticker_candidates),
+            "ticker_candidate_count": ticker_candidate_count,
             "events": len(scored),
             "trade_ideas": idea_count,
+            "top_signals": len(top_all),
+            "top_ticker_signals": len(top_ticker_pairs),
         }
